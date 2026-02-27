@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ir_cmt_bankaccount_year_recv_sub" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="515bf667-823d-45d7-8110-09f4e2d4974a">
+	<property name="ireport.zoom" value="1.771561000000001"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="as_scoop" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="year" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="group_acc" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    f.slip_date,
+    f.payment_desc,
+    d.slipitem_desc,
+    f.item_amt,
+    f.itemnet_amt,
+    b.account_no,
+    b.account_name,
+    m.balance_begin,
+    m.balance,
+    m.item_amt as item_bankstm,
+    m.sign_operate,
+	m.detail_desc,
+	m.seq_no,
+    NVL(
+        MIN(m.balance_begin) KEEP (
+            DENSE_RANK FIRST ORDER BY m.seq_no
+        ) OVER (
+            PARTITION BY m.account_no, m.operate_date
+        ),0
+    ) AS begin_amt
+FROM finbankstatement m
+LEFT JOIN finbankaccount b
+    ON m.account_no = b.account_no
+LEFT JOIN finslip f
+    ON TRIM(f.slip_no) = TRIM(m.refer_slipno)
+LEFT JOIN finslipdet d
+    ON f.slip_no = d.slip_no
+    AND d.account_no = m.account_no
+WHERE m.coop_id = $P{as_scoop}
+AND EXTRACT(YEAR FROM m.operate_date) = $P{year}
+AND m.account_no = $P{group_acc}
+AND m.sign_operate = 1
+AND (d.cash_type = 'CBT' OR d.cash_type IS NULL)
+AND (f.payment_status = 1 OR f.payment_status IS NULL)]]>
+	</queryString>
+	<field name="SLIP_DATE" class="java.sql.Timestamp"/>
+	<field name="PAYMENT_DESC" class="java.lang.String"/>
+	<field name="SLIPITEM_DESC" class="java.lang.String"/>
+	<field name="ITEM_AMT" class="java.math.BigDecimal"/>
+	<field name="ITEMNET_AMT" class="java.math.BigDecimal"/>
+	<field name="ACCOUNT_NO" class="java.lang.String"/>
+	<field name="ACCOUNT_NAME" class="java.lang.String"/>
+	<field name="BALANCE_BEGIN" class="java.math.BigDecimal"/>
+	<field name="BALANCE" class="java.math.BigDecimal"/>
+	<field name="ITEM_BANKSTM" class="java.math.BigDecimal"/>
+	<field name="SIGN_OPERATE" class="java.math.BigDecimal"/>
+	<field name="DETAIL_DESC" class="java.lang.String"/>
+	<field name="SEQ_NO" class="java.math.BigDecimal"/>
+	<field name="BEGIN_AMT" class="java.math.BigDecimal"/>
+	<sortField name="SEQ_NO"/>
+	<variable name="sum_recv_itemnet_amt" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{ITEMNET_AMT}==null?$F{ITEM_BANKSTM}:$F{ITEMNET_AMT}]]></variableExpression>
+	</variable>
+	<variable name="group_accno" class="java.lang.String">
+		<variableExpression><![CDATA[$F{ACCOUNT_NAME}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="7d73a112-5fac-4d4c-bd67-6862cceae541" x="0" y="0" width="170" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SLIPITEM_DESC}==null?$F{DETAIL_DESC}:$F{SLIPITEM_DESC}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="04deacdf-bf8c-4abe-b55f-6fd2f9535465" x="170" y="0" width="107" height="20"/>
+				<box rightPadding="7">
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ITEMNET_AMT}==null?$F{ITEM_BANKSTM}:$F{ITEMNET_AMT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
