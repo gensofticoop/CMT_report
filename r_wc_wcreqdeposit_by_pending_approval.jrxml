@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="r_wc_wcreqdeposit_by_pending_approval" language="groovy" pageWidth="939" pageHeight="595" orientation="Landscape" columnWidth="899" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7dc76156-820c-4c99-83b2-d176b99f78ac">
+	<property name="ireport.zoom" value="1.3310000000000004"/>
+	<property name="ireport.x" value="47"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Data" uuid="e4e91b08-114d-40c8-9609-2df25f951908">
+		<parameter name="start_date" class="java.lang.String">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="end_date" class="java.lang.String">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="as_wcid" class="java.lang.String">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="as_coopid" class="java.lang.String">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT
+	(pre.prename_desc)|| TRIM(mb.memb_name) || ' ' || TRIM(mb.memb_surname) AS "MEMBER_NAME",
+	req.apply_date, --วันที่สมัคร
+	req.recv_docno,--เลขทะเบียนรับ
+	req.member_no,
+	mb.card_person,
+	mbg.membgroup_desc, --หน่วยงาน
+	dt.district_desc,
+	pv.province_desc, --ประเภทการโอน ตัดออก
+	req.entry_id
+FROM
+	wcreqdeposit req
+JOIN mbmembmaster mb ON
+	mb.member_no = req.member_no
+LEFT JOIN mbucfprename pre ON
+	mb.prename_code = pre.prename_code
+LEFT JOIN mbucfmembgroup mbg ON
+	mbg.membgroup_code = mb.membgroup_code
+LEFT JOIN mbucfdistrict dt ON
+	dt.district_code = mbg.district_code
+LEFT JOIN mbucfprovince pv ON
+	pv.province_code = mbg.province_code
+WHERE
+	req.apply_date BETWEEN to_date($P{start_date}, 'YYYYMMDD') and to_date($P{end_date}, 'YYYYMMDD')
+	AND req.coop_id = $P{as_coopid}
+	AND req.wc_id = $P{as_wcid}
+	AND req.approve_status = 8
+ORDER BY
+	req.deptrequest_docno]]>
+		</queryString>
+		<field name="MEMBER_NAME" class="java.lang.String"/>
+		<field name="APPLY_DATE" class="java.sql.Timestamp"/>
+		<field name="RECV_DOCNO" class="java.lang.String"/>
+		<field name="MEMBER_NO" class="java.lang.String"/>
+		<field name="CARD_PERSON" class="java.lang.String"/>
+		<field name="MEMBGROUP_DESC" class="java.lang.String"/>
+		<field name="DISTRICT_DESC" class="java.lang.String"/>
+		<field name="PROVINCE_DESC" class="java.lang.String"/>
+		<field name="ENTRY_ID" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="start_date" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end_date" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="as_wcid" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="as_coopid" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select dummy from dual]]>
+	</queryString>
+	<field name="DUMMY" class="java.lang.String"/>
+	<detail>
+		<band height="129" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="899" height="65" uuid="a4972dec-6c95-49b6-85a9-1e02bddfee4c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA["สมาคมฌาปนกิจสงเคราะห์สมาชิกสหกรณ์องค์กรปกครองส่วนท้องถิ่น\n" +
+"รายงานรายชื่อสมาชิกรออนุมัต\nิ" +
+"ตั้งแต่วันที่ " +
+new SimpleDateFormat("dd/MM/").format(new SimpleDateFormat("yyyyMMdd").parse($P{start_date})) +
+(Integer.parseInt(new SimpleDateFormat("yyyy").format(new SimpleDateFormat("yyyyMMdd").parse($P{start_date}))) + 543) +
+" ถึงวันที่ " +
+new SimpleDateFormat("dd/MM/").format(new SimpleDateFormat("yyyyMMdd").parse($P{end_date})) +
+(Integer.parseInt(new SimpleDateFormat("yyyy").format(new SimpleDateFormat("yyyyMMdd").parse($P{end_date}))) + 543)]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement key="table 1" style="table_TD" x="0" y="65" width="899" height="64" uuid="79ab9b48-6e9c-47bd-8f7a-82a99d7450c6"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Data" uuid="3a13b861-82b6-4f58-8225-77115c7afa41">
+						<datasetParameter name="start_date">
+							<datasetParameterExpression><![CDATA[$P{start_date}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="end_date">
+							<datasetParameterExpression><![CDATA[$P{end_date}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="as_wcid">
+							<datasetParameterExpression><![CDATA[$P{as_wcid}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="as_coopid">
+							<datasetParameterExpression><![CDATA[$P{as_coopid}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="35" uuid="87d2f47e-35e9-4123-bf88-fdc7080d7265">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement style="table_TD" mode="Opaque" x="0" y="0" width="35" height="30" uuid="01a36dab-54c8-4a30-8269-d3321c2145d6"/>
+								<box>
+									<leftPen lineWidth="0.1"/>
+									<rightPen lineWidth="0.1"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Angsana New" size="14"/>
+								</textElement>
+								<text><![CDATA[ที่]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement style="table_TD" x="0" y="0" width="35" height="20" uuid="8496e320-a70f-4c93-b9e9-60b5d7101ed3"/>
+								<box>
+									<leftPen lineWidth="0.1"/>
+									<rightPen lineWidth="0.1"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Angsana New" size="14"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="134" uuid="b88d9e92-283a-4909-93c0-6955f1377385">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement style="table_TD" x="0" y="0" width="134" height="30" uuid="4ace396a-9881-4bc4-9e83-020aa9e6084a"/>
+								<box>
+									<leftPen lineWidth="0.1"/>
+									<rightPen lineWidth="0.1"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Angsana New" size="14"/>
+								</textElement>
+								<text><![CDATA[ชื่อ นามสกุล]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement style="table_TD" x="0" y="0" width="134" height="20" uuid="fd9ab205-a945-4b1a-a55b-050416d74b7c"/>
+								<box>
+									<leftPen lineWidth="0.1"/>
+									<rightPen lineWidth="0.1"/>
+								</box>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Angsana New" size="14"/>
+									<paragraph firstLineIndent="2"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{MEMBER_NAME}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="1fe6770a-bee5-400a-a7f6-fb54a2a76ab0">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement style="table_TD" x="0" y="0" width="90" height="30" uuid="68a8128c-da0e-4272-8398-a457bedbbb36"/>
+								<box>
+									<leftPen lineWidth="0.1"/>
+									<rightPen lineWidth="0.1"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Angsana New" size="14"/>
+								</textElement>
+								<text><![CDATA[วันที่ สมัคร]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement style="table_TD" x="0" y="0" width="90" height="20" uuid="9a0e127f-6895-4c49-b6c8-d060cb075e34"/>
+								<box>
+									<leftPen lineWidth="0.1"/>
+									<rightPen lineWidth="0.1"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Angsana New" size="14"/>
+								</textElement>
+								<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/").format($F{APPLY_DATE}) + (new Integer(new SimpleDateFormat("yyyy").format($F{APPLY_DATE})) + 543)]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="65" uuid="a32899b3-7916-4d0b-98bd-127ee413d333">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement style="table_TD" x="0" y="0" width="65" height="30" uuid="0aa7d418-d374-494f-81ee-5cbfdfad448a"/>
+								<box>
+									<leftPen lineWidth="0.1"/>
+									<rightPen lineWidth="0.1"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Angsana New" size="14"/>
+								</textElement>
+								<text><![CDATA[เลขทะเบียนรับ]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement style="table_TD" x="0" y="0" width="65" height="20" uuid="509b18cf-142d-4fc2-bacc-87f6770eefd9"/>
+								<box>
+									<leftPen lineWidth="0.1"/>
+									<rightPen lineWidth="0.1"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Angsana New" size="14"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{RECV_DOCNO}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="65" uuid="5656b0b3-d71a-45c8-832b-3f103f543050">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement style="table_TD" x="0" y="0" width="65" height="30" uuid="5dee93c3-dd7b-4db8-ad2a-d91371f229f5"/>
+								<box>
+									<leftPen lineWidth="0.1"/>
+									<rightPen lineWidth="0.1"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Angsana New" size="14"/>
+								</textElement>
+								<text><![CDATA[ทะเบียนสหกรณ์]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement style="table_TD" x="0" y="0" width="65" height="20" uuid="7af39c92-8d26-481b-9bbe-2420eb27345f"/>
+								<box>
+									<leftPen lineWidth="0.1"/>
+									<rightPen lineWidth="0.1"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Angsana New" size="14"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{MEMBER_NO}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="91" uuid="ddb187d2-f976-445b-a905-771dff1fc3b8">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement style="table_TD" x="0" y="0" width="91" height="30" uuid="ef9f4679-31b3-4e73-af63-f5a41c3067f7"/>
+								<box>
+									<leftPen lineWidth="0.1"/>
+									<rightPen lineWidth="0.1"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Angsana New" size="14"/>
+								</textElement>
+								<text><![CDATA[เลขที่บัตร]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement style="table_TD" x="0" y="0" width="91" height="20" uuid="3a2bbf4f-251f-4e85-ad07-2bec175b4ade"/>
+								<box>
+									<leftPen lineWidth="0.1"/>
+									<rightPen lineWidth="0.1"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Angsana New" size="14"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{CARD_PERSON}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="149" uuid="4f2cc069-eba9-43d8-991b-50339cb4938c">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement style="table_TD" x="0" y="0" width="149" height="30" uuid="ada9cb47-f60c-4a58-9179-f820a2e688b3"/>
+								<box>
+									<leftPen lineWidth="0.1"/>
+									<rightPen lineWidth="0.1"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Angsana New" size="14"/>
+								</textElement>
+								<text><![CDATA[หน่วยงาน]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement style="table_TD" x="0" y="0" width="149" height="20" uuid="01bfdb9f-e99e-4ba3-a69c-88ffaa89f64c"/>
+								<box>
+									<leftPen lineWidth="0.1"/>
+									<rightPen lineWidth="0.1"/>
+								</box>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Angsana New" size="14"/>
+									<paragraph firstLineIndent="3"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{MEMBGROUP_DESC}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="c93ae164-9772-4b69-92bc-26b33e31004a">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement style="table_TD" x="0" y="0" width="90" height="30" uuid="190953d2-4b33-4107-812b-63a722d0e2d5"/>
+								<box>
+									<leftPen lineWidth="0.1"/>
+									<rightPen lineWidth="0.1"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Angsana New" size="14"/>
+								</textElement>
+								<text><![CDATA[อำเภอ]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement style="table_TD" x="0" y="0" width="90" height="20" uuid="39237578-8012-4a0b-b1b5-b9bb7af1ba13"/>
+								<box>
+									<leftPen lineWidth="0.1"/>
+									<rightPen lineWidth="0.1"/>
+								</box>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Angsana New" size="14"/>
+									<paragraph firstLineIndent="3"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{DISTRICT_DESC}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="46943e92-8add-4f8e-a39e-b81878165763">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement style="table_TD" x="0" y="0" width="90" height="30" uuid="f4fc5de6-464f-489f-8551-e84c3ab5f02f"/>
+								<box>
+									<leftPen lineWidth="0.1"/>
+									<rightPen lineWidth="0.1"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Angsana New" size="14"/>
+								</textElement>
+								<text><![CDATA[จังหวัด]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement style="table_TD" x="0" y="0" width="90" height="20" uuid="b9985f00-3461-431c-ab8b-a5c4a22dc1e7"/>
+								<box>
+									<leftPen lineWidth="0.1"/>
+									<rightPen lineWidth="0.1"/>
+								</box>
+								<textElement>
+									<font fontName="Angsana New" size="14"/>
+									<paragraph firstLineIndent="3"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{PROVINCE_DESC}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="fc9cf294-98fd-44d0-990d-676cef675aed">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement style="table_TD" x="0" y="0" width="90" height="30" uuid="1b4ade56-8e71-4b76-b843-5169651e3cee"/>
+								<box>
+									<leftPen lineWidth="0.1"/>
+									<rightPen lineWidth="0.1"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Angsana New" size="14"/>
+								</textElement>
+								<text><![CDATA[ผู้บันทึก]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement style="table_TD" x="0" y="0" width="90" height="20" uuid="5c721c1f-b565-4ec1-b37a-f8828cb00821"/>
+								<box>
+									<leftPen lineWidth="0.1"/>
+									<rightPen lineWidth="0.1"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Angsana New" size="14"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{ENTRY_ID}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+</jasperReport>

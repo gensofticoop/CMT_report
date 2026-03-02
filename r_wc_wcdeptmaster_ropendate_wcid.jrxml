@@ -12,10 +12,10 @@
 	<parameter name="as_app" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="start_date" class="java.lang.String">
+	<parameter name="start_date" class="java.util.Date">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="end_date" class="java.lang.String">
+	<parameter name="end_date" class="java.util.Date">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
@@ -51,7 +51,7 @@ where
     wcdeptmaster.coop_id = $P{as_coopid}
     and wcdeptmaster.wc_id = $P{as_wcid}
     and wcdeptmaster.deptclose_status = 0
-    and trunc(wcdeptmaster.deptopen_date) between to_date($P{start_date}, 'YYYYMMDD') and to_date($P{end_date}, 'YYYYMMDD')
+    and trunc(wcdeptmaster.deptopen_date) between $P{start_date} and $P{end_date}
 order by
     wcdeptmaster.deptaccount_no]]>
 	</queryString>
@@ -113,9 +113,9 @@ order by
 					<font fontName="Angsana New" size="16" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["รายงานทะเบียนสมาชิก คุ้มครองตั้งแต่วันที่ " +
-new SimpleDateFormat("dd/MM/yyyy", new Locale("th", "TH")).format(new SimpleDateFormat("yyyyMMdd", new Locale("en", "US")).parse($P{start_date})) +
+new SimpleDateFormat("dd/MM/yyyy", new Locale("th", "TH")).format($P{start_date}) +
 " ถึง " +
-new SimpleDateFormat("dd/MM/yyyy", new Locale("th", "TH")).format(new SimpleDateFormat("yyyyMMdd", new Locale("en", "US")).parse($P{end_date}))]]></textFieldExpression>
+new SimpleDateFormat("dd/MM/yyyy", new Locale("th", "TH")).format($P{end_date})]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -321,6 +321,7 @@ new SimpleDateFormat("dd/MM/yyyy", new Locale("th", "TH")).format(new SimpleDate
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Angsana New" size="16"/>
+					<paragraph leftIndent="3"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{PRENAME_DESC}+$F{DEPTACCOUNT_NAME}+"  " +$F{DEPTACCOUNT_SNAME}]]></textFieldExpression>
 			</textField>
@@ -363,6 +364,7 @@ new SimpleDateFormat("dd/MM/yyyy", new Locale("th", "TH")).format(new SimpleDate
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Angsana New" size="16"/>
+					<paragraph leftIndent="3"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{MEMBGROUP_DESC}]]></textFieldExpression>
 			</textField>
